@@ -10,8 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,8 +67,11 @@ class RepoAdapter(context: Context, resource: Int, objects: List<Repo>) :
         val repoView = inflator.inflate(R.layout.repo_list_layout, parent, false)
 
         val textView = repoView.findViewById<TextView>(R.id.repoTextView)
-
+        val imageView = repoView.findViewById<ImageView>(R.id.avatarImageView)
         val repo = getItem(position)
+        Picasso.with(context).load(Uri.parse(repo?.owner?.avatar_url)).into(imageView)
+
+
         textView.text = repo?.full_name
 
         return repoView
