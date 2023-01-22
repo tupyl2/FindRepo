@@ -12,16 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:autofillHints=""
+        android:backgroundTint="@color/black"
         android:ems="10"
         android:hint="@string/kotlin_json_parser"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textColorHint="#546E7A"
-        android:backgroundTint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/searchButton"
@@ -31,5 +30,32 @@
         android:text="@string/search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/searchEditText"
+        tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <EditText
+        android:id="@+id/userSearchEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/search_users"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textColorHint="#546E7A"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchButton" />
+
+    <Button
+        android:id="@+id/userSearchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/usersearch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userSearchEditText" />
+
 </android.support.constraint.ConstraintLayout>

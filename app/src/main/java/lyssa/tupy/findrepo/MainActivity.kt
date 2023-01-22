@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         title = "Github Search"
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
+        val userRepoEditText = findViewById<EditText>(R.id.userSearchEditText)
 
         val button = findViewById<Button>(R.id.searchButton)
         button.setOnClickListener {
@@ -20,5 +21,14 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("searchTerm", searchEditText.text.toString())
             startActivity(intent)
         }
+
+        val viewRepoButton = findViewById<Button>(R.id.userSearchButton)
+        viewRepoButton.setOnClickListener {
+            val intent = Intent(this, SearchResultActivity::class.java)
+            intent.putExtra("username", userRepoEditText.text.toString())
+            startActivity(intent)
+
+        }
+
     }
 }

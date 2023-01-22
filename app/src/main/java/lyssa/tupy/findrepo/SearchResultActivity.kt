@@ -2,10 +2,11 @@ package lyssa.tupy.findrepo
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
+
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,24 +25,15 @@ class SearchResultActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search_result)
 
         val searchTerm = intent.getStringExtra("searchTerm")
+        val retriever = GitHubRetriever()
+        if(searchTerm != null){
+            //search
 
         val callback = object : Callback<GitHubSearchResult>{
             override fun onResponse(call: Call<GitHubSearchResult>?, response: Response<GitHubSearchResult>?) {
                val searchResult = response?.body()
                 if(searchResult != null){
-                    for (repo in searchResult!!.items){
-                        println(repo.html_url)
-                    }
-
-                    val listView = findViewById<ListView>(R.id.repoListView)
-                    listView.setOnItemClickListener { adapterView, view, i, l ->
-                        val selectedRepo = searchResult!!.items[i]
-                        //OPEN THE URL IN A BROWSER
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(selectedRepo.html_url))
-                        startActivity(intent)
-                    }
-                    val adapter = RepoAdapter(this@SearchResultActivity, android.R.layout.simple_list_item_1, searchResult!!.items)
-                    listView.adapter = adapter
+                  listRepos(searchResult!!.items)
                 }
             }
 
@@ -50,11 +42,49 @@ class SearchResultActivity : AppCompatActivity() {
             }
 
         }
-        val retriever = GitHubRetriever()
+
         retriever.getRepo(callback, searchTerm!!)
+        } else {
+            //user repo
+            val username = intent.getStringExtra("username")
+            val callback = object : Callback<List<Repo>>{
+                override fun onResponse(call: Call<List<Repo>>, response: Response<List<Repo>>) {
+                    if(response.code()==404){
+                        println("User does not exist")
+                        val theView = this@SearchResultActivity.findViewById<View>(android.R.id.content)
+                        Snackbar.make(theView,"User Not Found", Snackbar.LENGTH_LONG).show()
+                        } else {
+
+                        val repos = response?.body()
+                        if (repos != null) {
+                            listRepos(repos)
+                        }
+                    }
+                    }
+
+                override fun onFailure(call: Call<List<Repo>>, t: Throwable) {
+                    println("not working")
+                }
+
+            }
+            retriever.userRepos(callback, username!!)
+        }
+
+        }
+        fun listRepos(repos: List<Repo>) {
+            val listView = findViewById<ListView>(R.id.repoListView)
+            listView.setOnItemClickListener { adapterView, view, i, l ->
+                val selectedRepo = repos!![i]
+                //OPEN THE URL IN A BROWSER
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(selectedRepo.html_url))
+                startActivity(intent)
+            }
+            val adapter = RepoAdapter(this@SearchResultActivity, android.R.layout.simple_list_item_1, repos!!)
+            listView.adapter = adapter
+        }
 
     }
-}
+
 
 class RepoAdapter(context: Context, resource: Int, objects: List<Repo>) :
     ArrayAdapter<Repo>(context, resource, objects) {
